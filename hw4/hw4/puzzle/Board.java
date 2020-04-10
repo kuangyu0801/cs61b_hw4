@@ -84,8 +84,8 @@ public class Board implements WorldState {
 
         for (int i = 0; i < (size * size); i += 1) {
             if (board[i] != i + 1 && board[i] != BLANK) {
-                int xDiff = Math.abs(toX(board[i]) - toX(i + 1));
-                int yDiff = Math.abs(toY(board[i]) - toY(i + 1));
+                int xDiff = Math.abs(toX(board[i] - 1) - toX(i));
+                int yDiff = Math.abs(toY(board[i] - 1) - toY(i));
                 manDist += xDiff + yDiff;
             }
         }
