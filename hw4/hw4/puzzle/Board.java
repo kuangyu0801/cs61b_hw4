@@ -2,11 +2,11 @@ package hw4.puzzle;
 
 import edu.princeton.cs.algs4.Queue;
 
-public class Board implements WorldState{
+public class Board implements WorldState {
     private int[] board;
     private int size;
     private static final int BLANK = 0;
-    private static final boolean useManhattanDistance = true;
+    private static final boolean USEMANHATTAN = true;
 
     /** Constructs a board from an N-by-N array of tiles where
     tiles[i][j] = tile at row i, column j*/
@@ -32,7 +32,7 @@ public class Board implements WorldState{
         s.append(N + "\n");
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                s.append(String.format("%2d ", tileAt(i,j)));
+                s.append(String.format("%2d ", tileAt(i, j)));
             }
             s.append("\n");
         }
@@ -42,8 +42,8 @@ public class Board implements WorldState{
 
     /** Returns value of tile at row i, column j (or 0 if blank)*/
     public int tileAt(int i, int j) {
-        boolean isIOut =  (i > (size - 1) || i < 0) ? true: false;
-        boolean isJOut =  (j > (size - 1) || j < 0) ? true: false;
+        boolean isIOut =  (i > (size - 1) || i < 0) ? true : false;
+        boolean isJOut =  (j > (size - 1) || j < 0) ? true : false;
         if (isIOut || isJOut) {
             throw new java.lang.IndexOutOfBoundsException();
         }
@@ -71,14 +71,21 @@ public class Board implements WorldState{
         return 0;
     }
 
+    private int toX(int index) {
+        return index / size;
+    }
+
+    private int toY(int index) {
+        return index % size;
+    }
     /** return the manhattan distance*/
     public int manhattan() {
         int manDist = 0;
 
         for (int i = 0; i < (size * size); i += 1) {
             if (board[i] != i + 1 && board[i] != BLANK) {
-                int xDiff = Math.abs(board[i] - (i + 1)) % size;
-                int yDiff = Math.abs(board[i] - (i + 1)) / size;
+                int xDiff = Math.abs(toX(board[i]) - toX(i + 1));
+                int yDiff = Math.abs(toY(board[i]) - toY(i + 1));
                 manDist += xDiff + yDiff;
             }
         }
@@ -87,7 +94,7 @@ public class Board implements WorldState{
 
     @Override
     public int estimatedDistanceToGoal() {
-        if (useManhattanDistance) {
+        if (USEMANHATTAN) {
             return manhattan();
         } else {
             return hamming();
@@ -128,10 +135,6 @@ public class Board implements WorldState{
             }
         }
         return neighbors;
-    }
-
-    public int[] returnArray() {
-        return board;
     }
 
     /** Returns true if this board's tile values are the same

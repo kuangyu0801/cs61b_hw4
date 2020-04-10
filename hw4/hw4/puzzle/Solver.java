@@ -33,7 +33,7 @@ public class Solver {
         headNode = new SearchNode(startState, 0, null, 0);
         nodePQ.insert(headNode);
         solve();
-        System.out.println(DEBUGTAG + "Total enqueued nodes:" + enqueueNum);
+        //System.out.println(DEBUGTAG + "Total enqueued nodes:" + enqueueNum);
     }
 
     private void solutionHelper() {
@@ -83,7 +83,9 @@ public class Solver {
 
             // if this is a startState, then it doesn't has parent and grandparet
             // thus setting it to itself
-            WorldState grandParentState = (curState.equals(startState)) ? curState : minNode.prevNode.nodeState;
+            //WorldState preState = ;
+            boolean isStart = curState.equals(startState);
+            WorldState grandParentState = (isStart) ? curState : minNode.prevNode.nodeState;
             if (curState.isGoal()) {
                 goalNode = minNode;
                 solutionMoves = countMoves(goalNode);
@@ -105,8 +107,6 @@ public class Solver {
                     int priority = curMoves + ws.estimatedDistanceToGoal();
                     nodePQ.insert(new SearchNode(ws, priority, minNode, curMoves + 1));
                     enqueueNum += 1;
-                    //System.out.println(DEBUGTAG + "[Enqueue] (" + ws + ", " + priority + ", " + minNode.nodeState + ")");
-                    //System.out.println(DEBUGTAG + "[Priority calculation] (" + priority + ", " +solutionMoves + ", " + ws.estimatedDistanceToGoal() + ")");
                 }
             }
         }
@@ -115,9 +115,9 @@ public class Solver {
     /**
      * declaring a Comparator for minPQ
      * */
-    public static class SearchNodeComparator implements Comparator<SearchNode> {
+    private static class SearchNodeComparator implements Comparator<SearchNode> {
 
-        public SearchNodeComparator() {
+        private SearchNodeComparator() {
 
         }
 
@@ -136,11 +136,11 @@ public class Solver {
         private SearchNode prevNode;
         private int priority;
 
-        private SearchNode(WorldState nodeState, int nodePriority, SearchNode prevNode, int nodeMoves) {
+        private SearchNode(WorldState nodeState, int priority, SearchNode prevNode, int nodeMoves) {
             this.nodeState = nodeState;
             this.nodeMoves = nodeMoves;
             this.prevNode = prevNode;
-            this.priority = nodePriority;
+            this.priority = priority;
         }
 
         @Override
